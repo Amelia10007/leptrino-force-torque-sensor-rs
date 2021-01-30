@@ -1,0 +1,21 @@
+[package]
+name = "leptrino-force-torque-sensor"
+version = "0.1.0"
+authors = ["Amelia10007 <nat.horn.mk0426@gmail.com>"]
+edition = "2018"
+description = "Device driver for Leptrino force torque sensor written in pure Rust."
+repository = "https://github.com/Amelia10007/leptrino-force-torque-sensor-rs"
+keywords = ["driver", "sensor", "force", "torque", "wrench", "leptrino"]
+categories = ["hardware-support"]
+license = "MIT"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+itertools = "0.10.0"
+pair_macro = "0.1.4"
+serialport = "4.0.0"
+
+[badges]
+travis-ci = { repository = "Amelia10007/leptrino-force-torque-sensor-rs", branch = "master" }

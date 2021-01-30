@@ -1,0 +1,9 @@
+language: rust
+rust: stable
+env: RUST_BACKTRACE=full
+os:
+- linux
+- osx
+- windows
+script:
+- "cargo test"
