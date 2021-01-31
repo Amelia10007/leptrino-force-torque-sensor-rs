@@ -225,12 +225,12 @@ impl LeptrinoSensor {
         })
     }
 
-    /// Gets the embedded filter's cutoff frequency in Hertz.
+    /// Gets the builtin filter's cutoff frequency in Hertz.
     /// # Returns
     /// `Ok(Some(hertz))` if the filter is enabled.
     /// `Ok(None)` if the filter is disabled.
     /// `Err(reason)` if an error occurred during communication to the sensor.
-    pub fn receive_embedded_filter_cutoff_hertz(&mut self) -> Result<Option<u32>, Error> {
+    pub fn receive_builtin_filter_cutoff_hertz(&mut self) -> Result<Option<u32>, Error> {
         self.communicate_pausing_wrench(|sensor| {
             send_command(&mut sensor.port, &[0x04, 0xFF, 0xB6, 0x00])?;
             std::thread::sleep(sensor.port.timeout());
@@ -238,11 +238,11 @@ impl LeptrinoSensor {
             let res = receive_message(&mut sensor.port)?;
             let raw = res.get(4).copied().ok_or(Error::ParseData)?;
 
-            sensor.product.embedded_filter_cutoff_hertz(raw)
+            sensor.product.builtin_filter_cutoff_hertz(raw)
         })
     }
 
-    /// Enable or disable the embedded filter.
+    /// Enable or disable the builtin filter.
     ///
     /// The modified setting will be applied after rebooting the sensor.
     /// # Params
@@ -257,14 +257,14 @@ impl LeptrinoSensor {
     /// let mut sensor = LeptrinoSensor::open(Product::Pfs055Ya251U6, "/dev/ttyUSB0").unwrap();
     ///
     /// // Disable the filter.
-    /// sensor.set_embedded_filter_cutoff_hertz(None).unwrap();
+    /// sensor.set_builtin_filter_cutoff_hertz(None).unwrap();
     /// ```
-    pub fn set_embedded_filter_cutoff_hertz(
+    pub fn set_builtin_filter_cutoff_hertz(
         &mut self,
         cutoff_hertz: Option<u32>,
     ) -> Result<(), Error> {
         self.communicate_pausing_wrench(|sensor| {
-            let raw = sensor.product.embedded_filter_raw(cutoff_hertz)?;
+            let raw = sensor.product.builtin_filter_raw(cutoff_hertz)?;
             let command = [0x08, 0xFF, 0xA6, 0x00, raw, 0x00, 0x00, 0x00];
 
             send_command(&mut sensor.port, &command)?;
@@ -334,7 +334,7 @@ impl Product {
     }
 
     /// Converts from raw message from the sensor into filter's cutoff frequency.
-    fn embedded_filter_cutoff_hertz(&self, raw_value: u8) -> Result<Option<u32>, Error> {
+    fn builtin_filter_cutoff_hertz(&self, raw_value: u8) -> Result<Option<u32>, Error> {
         match self {
             Product::Pfs055Ya251U6 => match raw_value {
                 0 => Ok(None),
@@ -347,7 +347,7 @@ impl Product {
     }
 
     /// Converts from filter's cutoff frequency into raw message to the sensor.
-    fn embedded_filter_raw(&self, cutoff_hertz: Option<u32>) -> Result<u8, Error> {
+    fn builtin_filter_raw(&self, cutoff_hertz: Option<u32>) -> Result<u8, Error> {
         match self {
             Product::Pfs055Ya251U6 => match cutoff_hertz {
                 Some(10) => Ok(1),
@@ -367,7 +367,7 @@ pub struct ProductInfo {
     pub product_type: String,
     /// Serial number of the sensor.
     pub serial: String,
-    /// Firmware embedded in the sensor.
+    /// Firmware of the sensor.
     pub firmware_version: String,
     /// Output rate in Hertz.
     pub output_rate: String,
