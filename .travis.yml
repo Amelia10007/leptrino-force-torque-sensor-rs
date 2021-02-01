@@ -5,5 +5,13 @@ os:
 - linux
 - osx
 - windows
+
+# libudev-dev is required in Linux platform
+# because serialport, a dependent crate requires it.
+addons:
+  apt:
+    packages:
+    - libudev-dev
+
 script:
 - "cargo test"
