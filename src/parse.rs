@@ -118,7 +118,10 @@ impl Display for ParseError {
         match self {
             ParseError::NAK => write!(f, "Received an negative acknowledgement."),
             ParseError::TooShort(l) => write!(f, "Received too short ({} bytes) message,", l),
-            ParseError::WrongDLE => write!(f, "DLE must be contained twice or more in a row, but was not."),
+            ParseError::WrongDLE => write!(
+                f,
+                "DLE must be contained twice or more in a row, but was not."
+            ),
             ParseError::WrongBCC => write!(f, "Wrong BCC."),
         }
     }
