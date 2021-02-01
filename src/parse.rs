@@ -31,12 +31,19 @@ pub(crate) fn parse_command(command: &[u8]) -> Vec<u8> {
 
     // Append data part.
     // If data has DLE, we need to append DLE twice in a row.
-    for byte in command.iter().chain(FOOTER.iter()).copied() {
+    for byte in command.iter().copied() {
         if byte == DLE {
             buf.push(byte);
         }
         buf.push(byte);
         bcc ^= byte;
+    }
+
+    for byte in FOOTER.iter().copied() {
+        buf.push(byte);
+        if byte != DLE {
+            bcc ^= byte;
+        }
     }
 
     buf.push(bcc);
