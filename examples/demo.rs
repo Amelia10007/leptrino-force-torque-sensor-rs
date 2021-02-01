@@ -53,9 +53,6 @@ fn main() {
     };
     println!("Successfully opened the sensor.");
 
-    // Correct zero-point
-    sensor.zeroed();
-
     // Repeatedly receive wrenches from the sensor.
     let measurement_count = 1000;
     for i in 0..measurement_count {
@@ -64,6 +61,11 @@ fn main() {
         match sensor.update() {
             Ok(w) => println!("[{}/{}] {:?}", i + 1, measurement_count, w),
             Err(e) => println!("[{}/{}] {}", i + 1, measurement_count, e),
+        }
+
+        // Correct zero-point by using the first wrench.
+        if i == 0 {
+            sensor.zeroed();
         }
     }
 
