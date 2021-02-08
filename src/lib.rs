@@ -321,7 +321,7 @@ fn receive_message(port: &mut Box<dyn SerialPort>) -> Result<Vec<u8>, Error> {
 /// Specify a product type of Leptrino force torque sensor.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Product {
-    /// PFD series, 250 N rated force, 6 Nm rated torque, 6-axis.
+    /// PFS series, 250 N rated force, 6 Nm rated torque, 6-axis.
     Pfs055Ya251U6,
 }
 
